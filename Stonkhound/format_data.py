@@ -1,4 +1,5 @@
 import csv
+from re import L
 
 def format_data(ticker_symbol):
     data = []
@@ -26,20 +27,26 @@ def format_data(ticker_symbol):
         year = p_year
         current_index += 1
     for i in range(len(formatted_data)-1, 0, -1):
-        f_date = ""
-        f_date += str((formatted_data[i])[0][0]) + "/"
-        f_date += str((formatted_data[i])[0][1]) + "/"
-        f_date += str((formatted_data[i])[0][2])
-        (formatted_data[i])[0] = f_date
-
         if (formatted_data[i])[1] < (formatted_data[i-1])[1]:
             (formatted_data[i])[1] = 1.0
         else:
             (formatted_data[i])[1] = 0.0
+    
     # "On this date you buy because a month from now you make profit"
     formatted_data.pop(0)
-    get_features(ticker_symbol)
-    return formatted_data
+    features = get_features(ticker_symbol)
+
+    final_data = []
+    for dp in formatted_data:
+        year = dp[0][2]
+        for fp in features:
+            if fp[0] == (int)(year - 1):
+                final_data.append(fp + [dp[1]])
+                final_data[-1].pop(0)
+                break
+    for dp in final_data:
+        print(dp)
+    return final_data
 
 
 def get_date(date_string):
@@ -58,16 +65,33 @@ def get_close(close_string):
 def get_features(ticker_symbol):
     data = []
     # Get date and closing cost for each month
-    with open('./data/{}/features.csv'.format(ticker_symbol, ticker_symbol), errors='ignore') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
+    with open('./data/{}/features.csv'.format(ticker_symbol, ticker_symbol)) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
         line_count = 0
         for row in csv_reader:
             if line_count == 0:
                 line_count += 1
             else:
-                data.append([row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10]])
-                print(data[-1])
+                dp = row[0].split()
+                for f in range(len(dp)):
+                    dp[f] = dp[f].strip('"')
+                    if("," in dp[f]):
+                        temp = ""
+                        for n in dp[f]:
+                            if n != ',':
+                                temp += n
+                        dp[f] = temp
+
+                    if(dp[f] == "––"):
+                        dp[f] = 0.0
+                    else:
+                        if f == 0:
+                            dp[f] = int(dp[f])
+                        else:
+                            dp[f] = float(dp[f])
+                    data.append(dp)
                 line_count += 1
+        return data
 
 def create_datapoint(dp_name, data):
     # open the file in the write mode
