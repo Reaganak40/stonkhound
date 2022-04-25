@@ -110,6 +110,7 @@ def create_datapoint(dp_name, data):
     # close the file
     f.close()
 
+# formats data for all given companies
 def create_dataset():
     create_datapoint('dp1', format_data('aapl'))
     create_datapoint('dp2', format_data('dis'))
@@ -119,6 +120,29 @@ def create_dataset():
     create_datapoint('dp6', format_data('wba'))
     create_datapoint('dp7', format_data('hmc'))
     create_datapoint('dp8', format_data('abbv'))
+    create_datapoint('dp9', format_data('intc'))
+    create_datapoint('dp10', format_data('mcd'))
+    create_datapoint('dp11', format_data('gpc'))
+    create_datapoint('dp12', format_data('xom'))
+    create_datapoint('dp13', format_data('afl'))
+    create_datapoint('dp14', format_data('t'))
+    create_datapoint('dp15', format_data('tgt'))
+    create_datapoint('dp16', format_data('hrl'))
+    create_datapoint('dp17', format_data('cvx'))
+    create_datapoint('dp18', format_data('nue'))
+    create_datapoint('dp19', format_data('pld'))
+    create_datapoint('dp20', format_data('mdt'))
+
+
+
+
+
+
+
+
+
+
+
 
 
 
