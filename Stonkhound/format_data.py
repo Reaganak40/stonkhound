@@ -73,6 +73,9 @@ def get_features(ticker_symbol):
                 line_count += 1
             else:
                 dp = row[0].split()
+                if(len(dp) == 1):  # if csv is incorrectly read
+                    dp = dp[0].split(',')
+
                 for f in range(len(dp)):
                     dp[f] = dp[f].strip('"')
                     if("," in dp[f]):
@@ -109,3 +112,14 @@ def create_datapoint(dp_name, data):
 
 def create_dataset():
     create_datapoint('dp1', format_data('aapl'))
+    create_datapoint('dp2', format_data('dis'))
+    create_datapoint('dp3', format_data('nke'))
+    create_datapoint('dp4', format_data('jnj'))
+    create_datapoint('dp5', format_data('msft'))
+    create_datapoint('dp6', format_data('wba'))
+    create_datapoint('dp7', format_data('hmc'))
+    create_datapoint('dp8', format_data('abbv'))
+
+
+
+
