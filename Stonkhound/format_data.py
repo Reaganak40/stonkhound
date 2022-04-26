@@ -74,7 +74,9 @@ def get_features(ticker_symbol):
             else:
                 dp = row[0].split()
                 if(len(dp) == 1):  # if csv is incorrectly read
-                    dp = dp[0].split(',')
+                    dp = strip_between(dp[0], '"', ',')
+                    dp = dp.split(',')
+
 
                 for f in range(len(dp)):
                     dp[f] = dp[f].strip('"')
@@ -109,29 +111,70 @@ def create_datapoint(dp_name, data):
 
     # close the file
     f.close()
+    return data
+def strip_between(old_string, between, remove):
+    nstr = ""
+    temp_str = ""
+    in_bound = False
+
+    for c in old_string:
+        if in_bound:
+            if(c == between):
+                temp_str = temp_str.replace(remove, "")
+                temp_str += c
+                nstr += temp_str
+                in_bound = False
+            else:
+                temp_str += c
+        else:
+            nstr += c
+            if(c == between):
+                in_bound = True
+                temp_str = ""
+    return nstr
+
+
+
 
 # formats data for all given companies
 def create_dataset():
-    create_datapoint('dp1', format_data('aapl'))
-    create_datapoint('dp2', format_data('dis'))
-    create_datapoint('dp3', format_data('nke'))
-    create_datapoint('dp4', format_data('jnj'))
-    create_datapoint('dp5', format_data('msft'))
-    create_datapoint('dp6', format_data('wba'))
-    create_datapoint('dp7', format_data('hmc'))
-    create_datapoint('dp8', format_data('abbv'))
-    create_datapoint('dp9', format_data('intc'))
-    create_datapoint('dp10', format_data('mcd'))
-    create_datapoint('dp11', format_data('gpc'))
-    create_datapoint('dp12', format_data('xom'))
-    create_datapoint('dp13', format_data('afl'))
-    create_datapoint('dp14', format_data('t'))
-    create_datapoint('dp15', format_data('tgt'))
-    create_datapoint('dp16', format_data('hrl'))
-    create_datapoint('dp17', format_data('cvx'))
-    create_datapoint('dp18', format_data('nue'))
-    create_datapoint('dp19', format_data('pld'))
-    create_datapoint('dp20', format_data('mdt'))
+    dataset = []
+    dataset += create_datapoint('dp1', format_data('aapl'))
+    dataset += create_datapoint('dp2', format_data('dis'))
+    dataset += create_datapoint('dp3', format_data('nke'))
+    dataset += create_datapoint('dp4', format_data('jnj'))
+    dataset += create_datapoint('dp5', format_data('msft'))
+    dataset += create_datapoint('dp6', format_data('wba'))
+    dataset += create_datapoint('dp7', format_data('hmc'))
+    dataset += create_datapoint('dp8', format_data('abbv'))
+    dataset += create_datapoint('dp9', format_data('intc'))
+    dataset += create_datapoint('dp10', format_data('mcd'))
+    dataset += create_datapoint('dp11', format_data('gpc'))
+    dataset += create_datapoint('dp12', format_data('xom'))
+    dataset += create_datapoint('dp13', format_data('afl'))
+    dataset += create_datapoint('dp14', format_data('t'))
+    dataset += create_datapoint('dp15', format_data('tgt'))
+    dataset += create_datapoint('dp16', format_data('hrl'))
+    dataset += create_datapoint('dp17', format_data('cvx'))
+    dataset += create_datapoint('dp18', format_data('nue'))
+    dataset += create_datapoint('dp19', format_data('pld'))
+    dataset += create_datapoint('dp20', format_data('mdt'))
+    for d in dataset:
+        print(d)
+    
+    # open the file in the write mode
+    f = open('data/dataset/dataset.csv', 'w')
+
+    # create the csv writer
+    writer = csv.writer(f, lineterminator = '\n')
+
+    # write a row to the csv file
+    for dp in dataset:
+        writer.writerow(dp)
+
+    # close the file
+    f.close()
+    return dataset
 
 
 
