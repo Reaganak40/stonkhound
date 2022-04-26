@@ -176,6 +176,18 @@ def create_dataset():
     f.close()
     return dataset
 
+def get_dataset():
+    data = []
+    # Get date and closing cost for each month
+    with open('./data/dataset/dataset.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        for row in csv_reader:
+            dp = row[0].split(",")
+            for i in range(len(dp)):
+                dp[i] = float(dp[i])
+            data.append(dp)
+    return data
+
 
 
 
