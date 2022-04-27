@@ -2,6 +2,11 @@
 import random
 import numpy as np
 
+# ======================================================================
+# Function: train_test_split
+# Date Modified: 4/26/2022
+# Details: Returns train and test data given a 2D dataset
+# ======================================================================
 def train_test_split(dataset, train_size):
     num_training = int(train_size * len(dataset))
 

@@ -1,6 +1,12 @@
 import csv
 from re import L
 
+# ======================================================================
+# Function: format_data
+# Date Modified: 4/26/2022
+# Details: given a ticker_symbol stock, goes to folder that contains the 
+# hisotrical data and condenses it to a datapoint
+# ======================================================================
 def format_data(ticker_symbol):
     data = []
     # Get date and closing cost for each year
@@ -48,20 +54,33 @@ def format_data(ticker_symbol):
         print(dp)
     return final_data
 
-
+# ======================================================================
+# Function: get_date
+# Date Modified: 4/26/2022
+# Details: Returns a 3-index array specifying date
+# ======================================================================
 def get_date(date_string):
     date = []
     stripped = date_string.split("/")
     for i in range(len(stripped)):
         date.append(int(stripped[i]))
     return date
-
+# ======================================================================
+# Function: get_close
+# Date Modified: 4/26/2022
+# Details: removes string parts of price to return float value
+# ======================================================================
 def get_close(close_string):
     stripped = close_string.strip()
     val = stripped.strip('$')
     return float(val)
 
-
+# ======================================================================
+# Function: get_features
+# Date Modified: 4/26/2022
+# Details: uses stock evaluation data to build array for features 
+# of datapoint
+# ======================================================================
 def get_features(ticker_symbol):
     data = []
     # Get date and closing cost for each month
@@ -98,6 +117,11 @@ def get_features(ticker_symbol):
                 line_count += 1
         return data
 
+# ======================================================================
+# Function: create_datapoint
+# Date Modified: 4/26/2022
+# Details: returns a full datapoint and writes dp to a csv
+# ======================================================================
 def create_datapoint(dp_name, data):
     # open the file in the write mode
     f = open('data/dataset/{}.csv'.format(dp_name), 'w')
@@ -112,6 +136,12 @@ def create_datapoint(dp_name, data):
     # close the file
     f.close()
     return data
+
+# ======================================================================
+# Function: strip_between
+# Date Modified: 4/26/2022
+# Details: removes all refrences of char between given dilemeters
+# ======================================================================
 def strip_between(old_string, between, remove):
     nstr = ""
     temp_str = ""
@@ -134,9 +164,13 @@ def strip_between(old_string, between, remove):
     return nstr
 
 
-
-
-# formats data for all given companies
+# ======================================================================
+# Function: create_dataset
+# Date Modified: 4/26/2022
+# Details: creates a stock dataset build from historical data, where the 
+# features include evaluation data, and labels identify if the price of 
+# the stock will increase in a year
+# ======================================================================
 def create_dataset():
     dataset = []
     dataset += create_datapoint('dp1', format_data('aapl'))
@@ -176,6 +210,13 @@ def create_dataset():
     f.close()
     return dataset
 
+# ======================================================================
+# Function: get_dataset
+# Date Modified: 4/26/2022
+# Details: returns a stock dataset build from historical data, where the 
+# features include evaluation data, and labels identify if the price of 
+# the stock will increase in a year
+# ======================================================================
 def get_dataset():
     data = []
     # Get date and closing cost for each month
