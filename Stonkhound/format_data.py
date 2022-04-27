@@ -193,6 +193,12 @@ def create_dataset():
     dataset += create_datapoint('dp18', format_data('nue'))
     dataset += create_datapoint('dp19', format_data('pld'))
     dataset += create_datapoint('dp20', format_data('mdt'))
+    dataset += create_datapoint('dp21', format_data('sbux'))
+    dataset += create_datapoint('dp22', format_data('twtr'))
+    dataset += create_datapoint('dp23', format_data('baba'))
+
+
+
     for d in dataset:
         print(d)
     
@@ -217,7 +223,7 @@ def create_dataset():
 # features include evaluation data, and labels identify if the price of 
 # the stock will increase in a year
 # ======================================================================
-def get_dataset():
+def get_dataset(equalize = False):
     data = []
     # Get date and closing cost for each month
     with open('./data/dataset/dataset.csv') as csv_file:
@@ -227,6 +233,36 @@ def get_dataset():
             for i in range(len(dp)):
                 dp[i] = float(dp[i])
             data.append(dp)
+
+    # make sure positive and negative values are equal
+    if(equalize):
+        n_1 = 0
+        n_0 = 0
+        type_min = 0
+        remove_count = 0
+
+        for dp in data:
+            if(dp[-1] == 1.0):
+                n_1 += 1
+            elif(dp[-1] == 0.0):
+                n_0 += 1
+            else:
+                print("faulty data!")
+        if(n_1 > n_0):
+            remove_count = n_1 - n_0
+            type_min = 1.0
+
+        else:
+            remove_count = n_0 - n_1
+            type_min = 0.0
+        for i in range(remove_count):
+            for g in range(len(data)):
+                if data[g][-1] == type_min:
+                    data.pop(g)
+                    break
+        
+
+
     return data
 
 

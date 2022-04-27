@@ -19,7 +19,7 @@ def main():
     print("=========================================")
     print("         WELCOME TO STONKHOUND!")
     print("=========================================")
-
+    
     # clf = ensemble_stonks()
     # X_train, y_train, X_test, y_test = train_test_split(get_dataset(), 0.9)
     # clf.fit(X_train, y_train)
@@ -29,11 +29,11 @@ def main():
     avg = 0
     trials = 100
     for i in range(trials):
-        avg += run_diagnostics()
+        avg += run_diagnostics(equalize = True)
     avg /= trials
     print("Avg accuracy of ensemble: {}".format(avg))
 
-    dataset = get_dataset()
+    dataset = get_dataset(equalize = True)
     n_1 = 0
     n_0 = 0
     for dp in dataset:
@@ -43,7 +43,7 @@ def main():
             n_0 += 1
         else:
             print("faulty data!")
-    print("n1 = {}, n0 = {}".format(n_1, n_0))
+    print("\n\nn1 = {}, n0 = {}".format(n_1, n_0))
     print("percentage of postive values: {}".format(n_1/(n_1 + n_0)))
     
 
@@ -52,9 +52,10 @@ def main():
 # Date Modified: 4/26/2022
 # Details: Returns accuracy of clf on
 # ======================================================================
-def run_diagnostics():
+def run_diagnostics(equalize = False):
     clf = ensemble_stonks()
-    X_train, y_train, X_test, y_test = train_test_split(get_dataset(), 0.9)
+    X_train, y_train, X_test, y_test = train_test_split(get_dataset(equalize=equalize), 0.9)
+
     clf.fit(X_train, y_train)
     predictions = clf.predict(X_test)
     return accuracy_score(y_test, predictions)

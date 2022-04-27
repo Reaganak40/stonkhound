@@ -20,7 +20,7 @@ from sklearn.metrics import accuracy_score
 class ensemble_stonks:
     # Ensemble classifiers
     dt = DecisionTreeClassifier()
-    mlp = MLPClassifier(random_state=1, max_iter=1000)
+    mlp = MLPClassifier(random_state=0, max_iter=10000)
     svm = make_pipeline(StandardScaler(), SVC(gamma='auto'))
     reg = LinearRegression()
     logistic = LogisticRegression(solver='lbfgs', max_iter=1000, random_state=0)
@@ -29,6 +29,7 @@ class ensemble_stonks:
     p = Perceptron(tol=1e-3, random_state=0)
     bag = BaggingClassifier(base_estimator=SVC(), n_estimators=10, random_state=0)
     gbc = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=1, random_state=0)
+    
     def fit(self, X, y):
         self.dt.fit(X,y)
         self.mlp.fit(X,y)
