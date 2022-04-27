@@ -33,7 +33,7 @@ def main():
 # ======================================================================
 # Function: run_diagnostics
 # Date Modified: 4/26/2022
-# Details: Returns accuracy of clf on stock data
+# Details: Returns accuracy of clf on
 # ======================================================================
 def run_diagnostics(clf, data):
     X_train, y_train, X_test, y_test = train_test_split(data, 0.9)
