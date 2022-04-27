@@ -8,7 +8,6 @@
 # ======================================================================
 from format_data import *
 from stocks_learning_algorithm import *
-from sklearn.neural_network import MLPClassifier
 
 
 # ======================================================================
@@ -21,24 +20,44 @@ def main():
     print("         WELCOME TO STONKHOUND!")
     print("=========================================")
 
-    clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+    # clf = ensemble_stonks()
+    # X_train, y_train, X_test, y_test = train_test_split(get_dataset(), 0.9)
+    # clf.fit(X_train, y_train)
+    # predictions = clf.predict(X_test)
+    # print(accuracy_score(y_test, predictions))
 
     avg = 0
-    num_trials = 10000
-    for i in range(num_trials):
-        avg += run_diagnostics(clf, get_dataset())
-    avg /= num_trials
-    print("average accuracy: {} from {} trials".format(round(avg, 3), num_trials))
+    trials = 100
+    for i in range(trials):
+        avg += run_diagnostics()
+    avg /= trials
+    print("Avg accuracy of ensemble: {}".format(avg))
+
+    dataset = get_dataset()
+    n_1 = 0
+    n_0 = 0
+    for dp in dataset:
+        if(dp[-1] == 1.0):
+            n_1 += 1
+        elif(dp[-1] == 0.0):
+            n_0 += 1
+        else:
+            print("faulty data!")
+    print("n1 = {}, n0 = {}".format(n_1, n_0))
+    print("percentage of postive values: {}".format(n_1/(n_1 + n_0)))
+    
 
 # ======================================================================
 # Function: run_diagnostics
 # Date Modified: 4/26/2022
 # Details: Returns accuracy of clf on
 # ======================================================================
-def run_diagnostics(clf, data):
-    X_train, y_train, X_test, y_test = train_test_split(data, 0.9)
-    clf.fit(X_train, y_train.ravel())
-    return clf.score(X_test, y_test)
+def run_diagnostics():
+    clf = ensemble_stonks()
+    X_train, y_train, X_test, y_test = train_test_split(get_dataset(), 0.9)
+    clf.fit(X_train, y_train)
+    predictions = clf.predict(X_test)
+    return accuracy_score(y_test, predictions)
 
 if __name__ == "__main__":
     main()
