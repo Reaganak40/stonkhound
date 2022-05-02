@@ -1,6 +1,7 @@
 import csv
 from re import L
 import random
+import numpy as np
 
 # ======================================================================
 # Function: format_data
@@ -108,7 +109,7 @@ def get_features(ticker_symbol):
                         dp[f] = temp
 
                     if(dp[f] == "––"):
-                        dp[f] = 0.0
+                        dp[f] = np.NaN
                     else:
                         if f == 0:
                             dp[f] = int(dp[f])
@@ -225,7 +226,7 @@ def create_dataset():
 # features include evaluation data, and labels identify if the price of 
 # the stock will increase in a year
 # ======================================================================
-def get_dataset(sampling = "normal"):
+def get_dataset(sampling = "normal", impute="mean"):
     data = []
     # Get date and closing cost for each month
     with open('./data/dataset/dataset.csv') as csv_file:
@@ -233,9 +234,29 @@ def get_dataset(sampling = "normal"):
         for row in csv_reader:
             dp = row[0].split(",")
             for i in range(len(dp)):
-                dp[i] = float(dp[i])
+                if(dp[i] == 'nan'):
+                    dp[i] = np.NaN
+                else:
+                    dp[i] = float(dp[i])
             data.append(dp)
-
+    impute_features = []
+    for i in range(len(data[0])-1): # for each feature
+        total = 0
+        count = 0
+        for dp in data:
+            if(not np.isnan(dp[i])):
+                if(impute == 'mean'):
+                    total += dp[i]
+                    count += 1
+        if(impute == 'mean'):
+            impute_features.append((total * 1.0) / count)
+    
+    # get rid of all nan data (imputation)
+    for i in range(len(data)):
+        for g in range(len(data[0])-1):
+            if(np.isnan(data[i][g])):
+                data[i][g] = impute_features[g]
+    
     if(sampling == "undersampling"):
         n_1 = 0
         n_0 = 0
@@ -291,7 +312,6 @@ def get_dataset(sampling = "normal"):
             for p in dp:
                 prev_dupe.append(p)
             data.append(prev_dupe)
-
     return data
 
 

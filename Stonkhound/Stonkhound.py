@@ -21,13 +21,13 @@ def main():
     print("=========================================")
     
     print("No sampling method:")
-    run_diagnotics(trials = 100, sampling='normal')
+    run_diagnotics(trials = 10, sampling='normal')
 
     print("Oversampling:")
-    run_diagnotics(trials = 100, sampling='oversampling')
+    run_diagnotics(trials = 10, sampling='oversampling')
 
     print("Undersampling:")
-    run_diagnotics(trials = 100, sampling='undersampling')
+    run_diagnotics(trials = 10, sampling='undersampling')
 
     
 def run_diagnotics(trials = 10, sampling = "normal"):
