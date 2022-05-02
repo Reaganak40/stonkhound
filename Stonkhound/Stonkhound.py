@@ -6,6 +6,7 @@
 # This code takes in historical stock data to learn and predict stock
 # growth. This was done by means of classification via nueral networks
 # ======================================================================
+from distutils.fancy_getopt import fancy_getopt
 from format_data import *
 from stocks_learning_algorithm import *
 
@@ -26,12 +27,31 @@ def main():
     # predictions = clf.predict(X_test)
     # print(accuracy_score(y_test, predictions))
 
-    avg = 0
-    trials = 100
+    accuracy = 0
+    precision = 0
+    recall = 0
+    F1_Score = 0
+    trials = 10
     for i in range(trials):
-        avg += run_diagnostics(equalize = True)
-    avg /= trials
-    print("Avg accuracy of ensemble: {}".format(avg))
+        t_accuracy, t_precision, t_recall, t_F1_score = run_diagnostics(equalize = True)
+        accuracy += t_accuracy
+        precision += t_precision
+        recall += t_recall
+        F1_Score += t_F1_score
+    
+    # divide by # of trials to get average of each metric
+    accuracy /= trials
+    precision /= trials
+    recall /= trials
+    F1_Score /= trials
+
+    print("Avg accuracy of ensemble: {}".format(accuracy))
+    print("Avg precision of ensemble: {}".format(precision))
+    print("Avg recall of ensemble: {}".format(recall))
+    print("Avg F1 Score of ensemble: {}".format(F1_Score))
+
+
+
 
     dataset = get_dataset(equalize = True)
     n_1 = 0
@@ -58,7 +78,28 @@ def run_diagnostics(equalize = False):
 
     clf.fit(X_train, y_train)
     predictions = clf.predict(X_test)
-    return accuracy_score(y_test, predictions)
+
+    tp = 0 # true positives
+    fp = 0 # false positives
+    tn = 0 # true negatives
+    fn = 0 # false negatives
+
+    for i in range(len(predictions)):
+        if(y_test[i] == 1.0):
+            if(y_test[i] == predictions[i]): # positive guessed positive
+                tp += 1
+            else:
+                fn += 1 # positive guessed negative
+        elif(y_test[i] == 0.0):
+            if(y_test[i] == predictions[i]): # negative guessed negative
+                tn += 1
+            else:
+                fp += 1 # negative guessed positive
+
+    precision = (tp * 1.0) / (tp + fp)
+    recall = (tp * 1.0) / (tp + fn)
+    F1_Score = (2.0 * precision * recall) / (precision + recall)
+    return accuracy_score(y_test, predictions), precision, recall, F1_Score
 
 if __name__ == "__main__":
     main()
