@@ -72,7 +72,6 @@ class ensemble_stonks:
 # ======================================================================
 def train_test_split(dataset, train_size):
     num_training = int(train_size * len(dataset))
-
     train = []
     test = []
 
@@ -89,12 +88,12 @@ def train_test_split(dataset, train_size):
     y_test_ = []
     for i in range(len(train)):
         # removes the label from the features and puts in in y
-        y_train_.append(train[i].pop(len(train[i])-1))
+        y_train_.append(train[i].pop())
 
     for i in range(len(test)):
         # removes the label from the features and puts in in y
-        y_test_.append(test[i].pop(len(test[i])-1))
-    
+        y_test_.append(test[i].pop())
+
     X_train = np.array(train)
     y_train = np.array(y_train_)
     X_test = np.array(test)

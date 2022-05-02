@@ -1,5 +1,6 @@
 import csv
 from re import L
+import random
 
 # ======================================================================
 # Function: format_data
@@ -218,12 +219,13 @@ def create_dataset():
 
 # ======================================================================
 # Function: get_dataset
-# Date Modified: 4/26/2022
+# Date Modified: 5/1/2022
+# Modified Details: Added sampling methods
 # Details: returns a stock dataset build from historical data, where the 
 # features include evaluation data, and labels identify if the price of 
 # the stock will increase in a year
 # ======================================================================
-def get_dataset(equalize = False):
+def get_dataset(sampling = "normal"):
     data = []
     # Get date and closing cost for each month
     with open('./data/dataset/dataset.csv') as csv_file:
@@ -234,8 +236,7 @@ def get_dataset(equalize = False):
                 dp[i] = float(dp[i])
             data.append(dp)
 
-    # make sure positive and negative values are equal
-    if(equalize):
+    if(sampling == "undersampling"):
         n_1 = 0
         n_0 = 0
         type_min = 0
@@ -251,7 +252,6 @@ def get_dataset(equalize = False):
         if(n_1 > n_0):
             remove_count = n_1 - n_0
             type_min = 1.0
-
         else:
             remove_count = n_0 - n_1
             type_min = 0.0
@@ -260,8 +260,37 @@ def get_dataset(equalize = False):
                 if data[g][-1] == type_min:
                     data.pop(g)
                     break
-        
+    if(sampling == "oversampling"):
+        n_1 = 0
+        n_0 = 0
+        add_type = 0
+        add_count = 0
+        min_data = []
 
+        for dp in data:
+            if(dp[-1] == 1.0):
+                n_1 += 1
+            elif(dp[-1] == 0.0):
+                n_0 += 1
+            else:
+                print("faulty data!")
+        if(n_1 > n_0):
+            add_count = n_1 - n_0
+            add_type = 0.0
+        else:
+            add_count = n_0 - n_1
+            add_type = 1.0
+        # get all minority data points for oversampling
+        for dp in data:
+            if dp[-1] == add_type:
+                min_data.append(dp)
+        # add minority data until equals majority data
+        for i in range(add_count):
+            prev_dupe = [] # THIS IS NEEDED TO PREVENT MEMEORY DUPLICATION (BECAUSE PYTHON IS FOOKIN STUPID)
+            dp = min_data[random.randint(0, len(min_data)-1)]
+            for p in dp:
+                prev_dupe.append(p)
+            data.append(prev_dupe)
 
     return data
 
