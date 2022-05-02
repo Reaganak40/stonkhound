@@ -199,10 +199,18 @@ def create_dataset():
     dataset += create_datapoint('dp22', format_data('twtr'))
     dataset += create_datapoint('dp23', format_data('baba'))
 
-
-
+    num_companies = 23
+    n_0 = 0
+    n_1 = 0
+    total = 0
     for d in dataset:
         print(d)
+        if(d[-1] == 0.0):
+            n_0 += 1
+        elif(d[-1] == 1.0):
+            n_1 += 1
+        total +=1
+    print("\nDataset Demographics: \n\t# of data points: {} (collected from {} companies)\n\t# of 1.0 labels: {}\n\t# of 0.0 labels: {}".format(total, num_companies, n_1, n_0))
     
     # open the file in the write mode
     f = open('data/dataset/dataset.csv', 'w')

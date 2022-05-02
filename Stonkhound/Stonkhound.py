@@ -16,20 +16,33 @@ from stocks_learning_algorithm import *
 # Details: Execution function for Stonkhound
 # ======================================================================
 def main():
-    print("=========================================")
-    print("         WELCOME TO STONKHOUND!")
-    print("=========================================")
-    
-    print("No sampling method:")
-    run_diagnotics(trials = 10, sampling='normal')
+    should_exit = False
+    while(not should_exit):
+        print("===================================================")
+        print("               WELCOME TO STONKHOUND!")
+        print("===================================================")
+        print(" Enter (1) to create dataset")
+        print(" Enter (2) to run diagnostics")
+        print(" Enter (3) to exit")
+        user_input = input(" << ")
 
-    print("Oversampling:")
-    run_diagnotics(trials = 10, sampling='oversampling')
+        if(user_input == '1'):
+            create_dataset()
+            input("\nPress Enter to continue...")
+        elif(user_input == '2'):
+            print("No sampling method:")
+            run_diagnotics(trials = 10, sampling='normal')
 
-    print("Undersampling:")
-    run_diagnotics(trials = 10, sampling='undersampling')
+            print("Oversampling:")
+            run_diagnotics(trials = 10, sampling='oversampling')
 
-    
+            print("Undersampling:")
+            run_diagnotics(trials = 10, sampling='undersampling')
+            input("\nPress Enter to continue...")
+        elif(user_input == '3'):
+            should_exit = True
+
+        
 def run_diagnotics(trials = 10, sampling = "normal"):
     accuracy = 0
     precision = 0
